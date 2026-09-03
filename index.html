@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F6F1E7">
+<meta name="robots" content="noindex, nofollow">
+<title>ТОПЧИК · Меню</title>
+
+<!-- Автоопределение устройства: телефон → мобильная версия, ПК → десктоп. Ставится до отрисовки. -->
+<script>
+(function(){try{
+  var mobUA=/Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile|BlackBerry|webOS/i.test(navigator.userAgent||'');
+  var coarse=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
+  var narrow=Math.min(screen.width||9999, window.innerWidth||9999)<820;
+  var dev=(mobUA||(coarse&&narrow))?'mobile':'desktop';
+  document.documentElement.setAttribute('data-device',dev);
+}catch(e){document.documentElement.setAttribute('data-device','desktop');}})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Inter:wght@400;500;600;700&display=swap">
+
+<style>
+  :root{
+    color-scheme: light;
+    --paper:#F6F1E7; --paper-2:#EFE7D6; --paper-3:#E9DFC9;
+    --ink:#2C2620; --ink-soft:#91836E;
+    --olive:#5C6440; --olive-deep:#474E31;
+    --rust:#A8451C; --rust-soft:#B9633A;
+    --gold:#A07C36; --line:#D8CDB8; --frame:#C4B594;
+    --shadow:rgba(44,32,18,.14);
+    --f-display:"Playfair Display","Times New Roman",Georgia,serif;
+    --f-body:"Inter",-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html{ background:var(--paper); }
+  body{ font-family:var(--f-body); background:var(--paper); color:var(--ink);
+    line-height:1.45; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; padding-bottom:36px; }
+  .container{ max-width:620px; margin:0 auto; padding:0 20px; }
+
+  /* ─── Views ─── */
+  .view{ display:none; }
+  .view.active{ display:block; animation:fade .35s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; } }
+
+  /* ─── Header (home) ─── */
+  .header{ text-align:center; padding:40px 0 22px; }
+  .ornament{ display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:14px; }
+  .ornament i{ height:1px; width:64px; background:var(--frame); display:block; }
+  .ornament b{ width:5px; height:5px; border-radius:50%; background:var(--rust); flex:none; }
+  .wordmark{ font-family:var(--f-display); font-weight:800; letter-spacing:.04em;
+    font-size:clamp(42px,13vw,60px); line-height:1; color:var(--ink); }
+  .subtitle{ margin-top:11px; font-size:11px; letter-spacing:.46em; font-weight:500;
+    color:var(--ink-soft); text-transform:uppercase; padding-left:.46em; }
+
+  /* ─── Tiles ─── */
+  .tiles{ display:grid; grid-template-columns:1fr 1fr; gap:13px; margin-top:8px; }
+  @media (max-width:360px){ .tiles{ grid-template-columns:1fr; } }
+  .tile{ position:relative; display:flex; flex-direction:column; justify-content:flex-start;
+    min-height:132px; text-align:left; cursor:pointer;
+    background:var(--paper-2); border:1px solid var(--line); border-radius:16px;
+    padding:18px 17px 16px; overflow:hidden; transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+    font-family:var(--f-body); color:var(--ink); }
+  .tile:hover{ transform:translateY(-2px); box-shadow:0 14px 30px -18px var(--shadow); border-color:var(--frame); }
+  .tile:active{ transform:translateY(0); }
+  .tile:focus-visible{ outline:2px solid var(--accent,var(--olive)); outline-offset:2px; }
+  .tile::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--accent,var(--olive)); }
+  .tile-kicker{ font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent,var(--olive));
+    font-weight:600; margin-bottom:6px; }
+  .tile-name{ font-family:var(--f-display); font-size:24px; font-weight:600; line-height:1.1; color:var(--ink); }
+  .tile-sub{ font-size:11.5px; color:var(--ink-soft); margin-top:7px; line-height:1.4; }
+  .tile-wide{ grid-column:1 / -1; min-height:96px; flex-direction:row; align-items:center; justify-content:space-between; }
+  .tile-wide .tile-name{ font-size:22px; }
+  .tile-wide .tile-arrow{ font-family:var(--f-display); font-size:26px; color:var(--accent,var(--gold)); }
+
+  /* ─── Category nav (кнопки-переключатели) ─── */
+  .catnav{ position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:8px;
+    padding:14px 0 12px; margin-bottom:8px; background:var(--paper);
+    box-shadow:0 8px 12px -12px var(--shadow); }
+  .nav-home{ flex:none; width:40px; height:40px; border-radius:50%; cursor:pointer;
+    background:var(--paper-2); border:1px solid var(--line); color:var(--ink); font-size:19px; line-height:1; }
+  .nav-home:hover{ border-color:var(--frame); }
+  .nav-scroll{ display:flex; gap:7px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; padding-right:4px; }
+  .nav-scroll::-webkit-scrollbar{ display:none; }
+  .nav-btn{ flex:none; font-family:var(--f-body); font-size:13px; font-weight:500; white-space:nowrap; cursor:pointer;
+    color:var(--ink-soft); background:var(--paper-2); border:1px solid var(--line); border-radius:999px; padding:9px 15px; }
+  .nav-btn:hover{ border-color:var(--frame); }
+  .nav-btn.active{ color:var(--paper); background:var(--olive-deep); border-color:var(--olive-deep); }
+  .kompleks-date{ display:block; font-family:var(--f-body); font-size:11px; letter-spacing:.06em;
+    text-transform:none; opacity:.8; margin-top:3px; }
+
+  /* ─── Category / items ─── */
+  .hint-line{ text-align:center; font-size:12px; color:var(--ink-soft); letter-spacing:.03em; margin:2px 0 20px; }
+  .hint-line span{ color:var(--rust); }
+  .category{ margin-bottom:30px; }
+  .category-header{ display:flex; align-items:baseline; gap:14px; margin-bottom:13px; }
+  .category-title{ font-family:var(--f-display); font-weight:600; color:var(--accent,var(--olive-deep));
+    font-size:21px; white-space:nowrap; }
+  .category-line{ flex:1; height:1px; background:var(--line); }
+
+  .menu-items{ display:flex; flex-direction:column; }
+  .menu-item{ padding:11px 0; border-bottom:1px dotted var(--line); }
+  .menu-item:last-child{ border-bottom:0; }
+  .dish-row{ display:flex; align-items:baseline; gap:10px; }
+  .dish-title{ font-family:var(--f-display); font-size:19px; font-weight:500; color:var(--ink); line-height:1.25; flex:1; min-width:0; overflow-wrap:break-word; }
+  .dish-title.tap{ cursor:pointer; }
+  .dish-title.tap .i{ display:inline-flex; align-items:center; justify-content:center; width:15px; height:15px;
+    margin-left:7px; border-radius:50%; border:1px solid var(--gold); color:var(--gold);
+    font-family:var(--f-body); font-size:9px; font-weight:600; font-style:normal; vertical-align:middle; transform:translateY(-2px); }
+  .dish-vol{ font-size:12px; color:var(--ink-soft); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .dish-price{ font-size:15px; font-weight:600; color:var(--ink); white-space:nowrap;
+    font-variant-numeric:tabular-nums; margin-left:auto; }
+  .dish-name2{ font-family:var(--f-display); font-size:15px; font-style:italic; color:var(--ink-soft); margin-top:1px; }
+  .dish-desc{ font-size:12.5px; color:var(--ink-soft); margin-top:4px; line-height:1.5; max-width:54ch; }
+
+  /* Добавки — аккуратный список в несколько колонок (не «чипсы в кучу») */
+  /* Телефон — 1 колонка (полная ширина, названия не переносятся); ПК — 2+ колонки автоматически */
+  .pill-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); column-gap:30px; row-gap:0; }
+  .pill{ display:flex; align-items:baseline; gap:10px; padding:7px 0;
+    border-bottom:1px dotted var(--line); font-size:14px; color:var(--ink); }
+  .pill-name{ flex:1; min-width:0; }
+  .pill-name::before{ content:"+"; color:var(--ink-soft); margin-right:6px; font-weight:500; }
+  .pill .pill-price{ font-size:13px; font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  /* ─── Метки блюд ─── */
+  .mk{ display:inline-block; width:15px; height:15px; margin-left:5px; vertical-align:-2px; }
+  .mk svg{ display:block; width:100%; height:100%; }
+  .mk-veg{ color:#7FA05A; }           /* пастельно-зелёный листик */
+  .mk-hot{ color:var(--rust); }        /* терракотовый перчик */
+  .mk-hit{ color:var(--gold); }        /* латунная звезда */
+  .mk-new-badge{ display:inline-block; margin-left:6px; vertical-align:1px; font-family:var(--f-body);
+    font-size:9px; font-weight:700; letter-spacing:.05em; color:var(--paper);
+    background:var(--gold); border-radius:5px; padding:1px 5px; line-height:1.35; }
+  .legend{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px 20px;
+    margin:24px 6px 0; font-size:12px; color:var(--ink-soft); }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .legend .mk{ margin-left:0; }
+
+  /* ─── Kompleks ─── */
+  .kompleks-empty{ text-align:center; padding:56px 20px; color:var(--ink-soft); }
+  .kompleks-empty-icon{ font-size:28px; color:var(--gold); margin-bottom:12px; }
+  .kompleks-empty-title{ font-family:var(--f-display); font-size:24px; color:var(--ink); margin-bottom:6px; }
+  .kompleks-price{ display:flex; align-items:center; justify-content:space-between; background:var(--olive-deep);
+    color:var(--paper); border-radius:14px; padding:16px 20px; margin-bottom:8px; }
+  .kompleks-price-label{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; opacity:.9; }
+  .kompleks-price-value{ font-family:var(--f-display); font-size:26px; font-weight:600; }
+  .kompleks-note{ text-align:center; font-size:12px; color:var(--ink-soft); margin:0 0 22px; }
+  .kompleks-note span{ color:var(--rust); }
+  .choice-grid{ display:grid; grid-template-columns:1fr; gap:9px; }
+  @media (min-width:460px){ .choice-grid{ grid-template-columns:1fr 1fr; } }
+  .choice-card{ position:relative; background:var(--paper-2); border:1px solid var(--line); border-radius:12px;
+    padding:13px 36px 13px 15px; cursor:pointer; transition:all .18s ease; }  /* правый жёлоб под значки i / ✓ */
+  .choice-card.selected{ background:var(--paper); border-color:var(--olive); box-shadow:inset 0 0 0 1px var(--olive); }
+  .choice-card.selected::after{ content:'✓'; position:absolute; bottom:10px; right:12px; color:var(--olive); font-size:13px; font-weight:700; }
+  .choice-name{ font-family:var(--f-display); font-size:18px; color:var(--ink); line-height:1.25; }
+  .choice-footnote{ font-size:11.5px; color:var(--ink-soft); margin-top:5px; line-height:1.45; }
+  .choice-price{ font-size:13px; font-weight:600; color:var(--olive-deep); margin-top:7px; }
+  .kbzhu-btn{ position:absolute; top:10px; right:12px; width:18px; height:18px; border-radius:50%;
+    border:1px solid var(--gold); color:var(--gold); font-style:normal; font-size:10px; font-weight:600;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; background:var(--paper); }
+  #total-bar{ position:sticky; bottom:14px; z-index:20; margin-top:22px; background:var(--paper);
+    border:1px solid var(--olive); border-radius:16px; box-shadow:0 12px 34px -14px var(--shadow); padding:16px 18px; }
+  .total-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .total-label{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); }
+  .total-reset{ font-family:var(--f-body); font-size:12px; color:var(--rust); background:none; border:none; cursor:pointer; }
+  .total-row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:5px 0; }
+  .total-row-cat{ font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
+  .total-row-name{ font-family:var(--f-display); font-size:16px; color:var(--ink); }
+  .total-row-price{ font-size:13px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+  .total-divider{ height:1px; background:var(--line); margin:8px 0; }
+  #total-kbzhu{ display:none; font-size:11.5px; color:var(--ink-soft); margin-bottom:8px; }
+  #total-kbzhu b{ color:var(--olive-deep); font-weight:600; }
+  .total-bottom{ display:flex; align-items:center; justify-content:flex-end; }
+  .total-sum-final{ font-family:var(--f-display); font-size:24px; font-weight:600; color:var(--ink); }
+  .total-sum-cur{ color:var(--rust); }
+  .total-hint{ font-size:12px; color:var(--ink-soft); text-align:right; margin-top:4px; }
+
+  /* ─── Modal ─── */
+  .overlay{ position:fixed; inset:0; z-index:100; display:none; background:rgba(44,36,32,.44);
+    backdrop-filter:blur(3px); align-items:center; justify-content:center; padding:24px; }
+  .overlay.show{ display:flex; animation:fade .2s ease; }
+  .modal{ background:var(--paper); border:1px solid var(--frame); border-radius:18px; padding:26px 24px 22px;
+    max-width:340px; width:100%; text-align:center; box-shadow:0 24px 60px -20px var(--shadow); }
+  .modal-name{ font-family:var(--f-display); font-size:23px; color:var(--ink); line-height:1.2; margin-bottom:4px; }
+  .modal-sostav{ font-size:12.5px; color:var(--ink-soft); line-height:1.5; margin-bottom:18px; }
+  .kbzhu-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .kbzhu-cell{ background:var(--paper-2); border:1px solid var(--line); border-radius:11px; padding:11px 4px; }
+  .kbzhu-num{ font-family:var(--f-display); font-size:20px; color:var(--olive-deep); font-weight:600; }
+  .kbzhu-lbl{ font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin-top:3px; }
+  .modal-close{ margin-top:18px; font-family:var(--f-body); font-size:13px; color:var(--ink-soft);
+    background:none; border:none; cursor:pointer; letter-spacing:.04em; }
+
+  /* ─── Footer ─── */
+  .footer{ text-align:center; padding:34px 0 8px; }
+  .footer-text{ font-family:var(--f-display); font-style:italic; font-size:19px; color:var(--ink-soft); margin-top:14px; }
+  .loyalty{ display:inline-flex; align-items:center; gap:16px; text-align:left; margin-top:24px; padding:14px 18px;
+    background:var(--paper-2); border:1px solid var(--line); border-radius:16px; }
+  .loyalty-cap{ font-family:var(--f-display); font-size:16px; color:var(--olive-deep); line-height:1.25; }
+  .loyalty-cap small{ display:block; font-family:var(--f-body); font-size:10px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ink-soft); margin-top:4px; }
+  .qr{ flex:none; width:88px; height:88px; background:#fff; border:1px solid var(--line); border-radius:9px; padding:6px; }
+  .qr svg{ display:block; width:100%; height:100%; }
+
+  /* Юридический блок в подвале */
+  .legal{ max-width:520px; margin:26px auto 0; padding-top:16px; border-top:1px solid var(--line); }
+  .legal p{ margin:0 0 8px; font-size:11.5px; line-height:1.55; color:var(--ink-soft); }
+  .legal .req{ font-size:10.5px; letter-spacing:.02em; opacity:.9; }
+
+  /* Кнопки подтверждения 18+ */
+  .age-actions{ display:flex; gap:10px; margin-top:6px; }
+  .age-btn{ flex:1; font-family:var(--f-body); font-size:13.5px; font-weight:500; cursor:pointer;
+    border-radius:10px; padding:11px 12px; border:1px solid var(--line); }
+  .age-no{ background:var(--paper-2); color:var(--ink-soft); }
+  .age-yes{ background:var(--olive-deep); color:var(--paper); border-color:var(--olive-deep); }
+
+  /* ══════ Сенсорные экраны: без «залипающего» ховера ══════ */
+  @media (hover:none){
+    .tile:hover{ transform:none; box-shadow:none; border-color:var(--line); }
+    .choice-card:hover, .nav-btn:hover, .back-btn:hover, .nav-home:hover, .tab:hover{ border-color:var(--line); }
+  }
+  /* крупные тап-цели на телефоне */
+  :root[data-device="mobile"] .nav-home{ width:42px; height:42px; }
+  :root[data-device="mobile"] .nav-btn{ padding:10px 16px; }
+
+  /* ══════ ДЕСКТОП-ВЕРСИЯ (широкий экран) ══════ */
+  @media (min-width:900px){
+    .container{ max-width:1000px; padding:0 32px; }
+    .wordmark{ font-size:66px; }
+    /* Плитки — по 3 в ряд, комплекс на всю ширину */
+    .tiles{ grid-template-columns:repeat(3,1fr); gap:16px; }
+    .tile{ min-height:150px; }
+    /* Бизнес-ланч — компактная широкая плашка (без пустоты) */
+    .tile-wide{ grid-column:1 / -1; min-height:0; padding:20px 30px; }
+    /* Раздел с едой — в две колонки, как в печатном меню */
+    #catBody.cat-food{ column-count:2; column-gap:52px; }
+    #catBody.cat-food .hint-line{ column-span:all; }
+    #catBody.cat-food .category{ break-inside:avoid; }
+    /* Бизнес-ланч — по центру, карточки выбора шире */
+    #catBody.cat-kompleks{ max-width:840px; margin-left:auto; margin-right:auto; }
+    #catBody.cat-kompleks .choice-grid{ grid-template-columns:1fr 1fr; }
+    .catnav{ padding-top:18px; }
+    .dish-title{ font-size:20px; }
+  }
+  @media (min-width:1200px){
+    .container{ max-width:1120px; }
+    .tiles{ grid-template-columns:repeat(4,1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ═════ ГЛАВНАЯ: выбор категории ═════ -->
+  <section class="view active" id="home">
+    <header class="header">
+      <div class="ornament"><i></i><b></b><i></i></div>
+      <div class="wordmark">ТОПЧИК</div>
+      <div class="subtitle">Меню</div>
+    </header>
+
+    <div class="tiles" id="tiles">
+      <div class="tile" style="min-height:120px"><div class="tile-name">Загрузка…</div></div>
+    </div>
+
+    <div class="legend" id="legend"></div>
+
+    <footer class="footer">
+      <div class="ornament"><i></i><b></b><i></i></div>
+      <div class="footer-text">Приятного аппетита</div>
+      <div class="loyalty">
+        <div class="loyalty-cap">Программа лояльности<small>Сканируйте · копите бонусы</small></div>
+        <div class="qr" id="qr"></div>
+      </div>
+      <div class="legal">
+        <p>Просим сообщить официанту об аллергии на продукты и ваших пожеланиях — мы позаботимся о вашем комфорте и безопасности.</p>
+        <p class="req">ООО «СТРИТ ФУД» · ИНН 9704030375 · ОГРН 1207700330716</p>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ═════ РАЗДЕЛ ═════ -->
+  <section class="view" id="cat">
+    <div class="catnav">
+      <button class="nav-home" onclick="goHome()" aria-label="На главную">⌂</button>
+      <div class="nav-scroll" id="navScroll"></div>
+    </div>
+    <div id="catBody"></div>
+  </section>
+
+</div>
+
+<!-- KBZHU modal -->
+<div class="overlay" id="kbzhuOverlay" onclick="closeKbzhu(event)">
+  <div class="modal">
+    <div class="modal-name" id="kbzhuName"></div>
+    <div class="modal-sostav" id="kbzhuSostav"></div>
+    <div class="kbzhu-grid">
+      <div class="kbzhu-cell"><div class="kbzhu-num" id="kbzhuCal">—</div><div class="kbzhu-lbl">Ккал</div></div>
+      <div class="kbzhu-cell"><div class="kbzhu-num" id="kbzhuProt">—</div><div class="kbzhu-lbl">Белки</div></div>
+      <div class="kbzhu-cell"><div class="kbzhu-num" id="kbzhuFat">—</div><div class="kbzhu-lbl">Жиры</div></div>
+      <div class="kbzhu-cell"><div class="kbzhu-num" id="kbzhuCarb">—</div><div class="kbzhu-lbl">Углеводы</div></div>
+    </div>
+    <button class="modal-close" onclick="closeKbzhu()">Закрыть</button>
+  </div>
+</div>
+
+<!-- Возрастное подтверждение 18+ (для раздела с алкоголем) -->
+<div class="overlay" id="ageOverlay">
+  <div class="modal">
+    <div class="modal-name">Только для лиц 18+</div>
+    <div class="modal-sostav">Этот раздел содержит информацию об алкогольной продукции. Продолжая, вы подтверждаете, что вам исполнилось 18 лет.</div>
+    <div class="age-actions">
+      <button class="age-btn age-no" onclick="declineAge()">Мне нет 18</button>
+      <button class="age-btn age-yes" onclick="confirmAge()">Мне есть 18</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const KOMPLEKS_CSV='data/kompleks.csv', MENU_CSV='data/menu.csv', DICT_CSV='data/sostav.csv';
+  let KOMPLEKS_PRICE=350;
+  const RESTAURANT_TZ='Europe/Moscow';   // часовой пояс заведения — день недели считается по нему
+  let SERVER_DATE=null;                    // время сервера (из заголовка ответа Date), если доступно
+  const SOSTAV={}, KBZHU={};
+  let MENU_TABS={}, SCHEDULE=null, TODAY_KEY='', TODAY_WD='';
+
+  // Кикеры/акценты плиток (еда — олива, бар/вино — терракота, обед — золото)
+  const KOMPLEKS_TAB='__kompleks__';
+  function catMeta(name){
+    const n=name.toLowerCase();
+    if(name===KOMPLEKS_TAB) return {kicker:'Обед дня', accent:'var(--gold)'};
+    if(n.includes('вин'))   return {kicker:'Вино', accent:'var(--rust)'};
+    if(n.includes('бар'))   return {kicker:'Напитки & коктейли', accent:'var(--rust)'};
+    if(n.includes('завтр')) return {kicker:'Утро', accent:'var(--olive)'};
+    return {kicker:'Кухня', accent:'var(--olive)'};
+  }
+
+  function parseCsv(text){
+    const lines=text.replace(/\r/g,'').split('\n'); const rows=[];
+    for(const line of lines){ const row=[]; let cur='',inQ=false;
+      for(let i=0;i<line.length;i++){ const c=line[i];
+        if(c==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;} else inQ=!inQ; }
+        else if(c===','&&!inQ){ row.push(cur); cur=''; } else cur+=c; }
+      row.push(cur); rows.push(row); }
+    return rows;
+  }
+  async function fetchCsv(url,{timeout=8000,tries=2}={}){
+    let lastErr;
+    for(let a=1;a<=tries;a++){ const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(),timeout);
+      try{ const r=await fetch(url,{signal:ctrl.signal,cache:'no-store'}); clearTimeout(t); return r; }
+      catch(e){ clearTimeout(t); lastErr=e; } }
+    throw lastErr||new Error('fetch failed');
+  }
+  const _esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const _js =s=>(s==null?'':String(s)).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  const numOrNull=v=>{ v=(v||'').toString().trim().replace(',','.'); if(v==='')return null; const n=parseFloat(v); return isNaN(n)?null:n; };
+
+  const MONTHS=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const WD=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  const WDMAP={понедельник:'понедельник',пн:'понедельник',вторник:'вторник',вт:'вторник',среда:'среда',ср:'среда',
+    четверг:'четверг',чт:'четверг',пятница:'пятница',пт:'пятница',суббота:'суббота',сб:'суббота',
+    воскресенье:'воскресенье',вс:'воскресенье'};
+  // День и дата — по времени СЕРВЕРА (заголовок Date ответа), с привязкой к часовому поясу заведения.
+  // Не зависит от часов гостя. Если сервер недоступен (напр. открыто файлом) — откат на часы устройства.
+  function todayInfo(base){
+    const now=(base instanceof Date && !isNaN(base))?base:new Date();
+    try{
+      const H=parseInt(new Intl.DateTimeFormat('en-GB',{timeZone:RESTAURANT_TZ,hour:'2-digit',hour12:false}).format(now),10);
+      const d=(H<6)?new Date(now.getTime()-864e5):now;   // до 06:00 — предыдущий день
+      const wd=new Intl.DateTimeFormat('ru-RU',{timeZone:RESTAURANT_TZ,weekday:'long'}).format(d).toLowerCase();
+      const key=new Intl.DateTimeFormat('en-CA',{timeZone:RESTAURANT_TZ,year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+      return {key,wd};
+    }catch(e){
+      const n=new Date(now); if(n.getHours()<6) n.setDate(n.getDate()-1);
+      const y=n.getFullYear(),m=String(n.getMonth()+1).padStart(2,'0'),dd=String(n.getDate()).padStart(2,'0');
+      return {key:`${y}-${m}-${dd}`, wd:WD[n.getDay()]};
+    }
+  }
+  function formatDate(key){ const [y,m,d]=key.split('-'); return `${parseInt(d)} ${MONTHS[parseInt(m)-1]}`; }
+  const cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):'';
+
+  async function loadDict(){
+    try{ const res=await fetchCsv(DICT_CSV); if(!res.ok)throw 0;
+      const rows=parseCsv(await res.text()); const h=rows[0].map(x=>x.trim().toLowerCase());
+      const col=(...n)=>{for(const x of n){const i=h.indexOf(x);if(i!==-1)return i;}return -1;};
+      const iN=col('name','название','наименование','блюдо'),iS=col('sostav','состав','описание'),
+            iC=col('cal','ккал'),iP=col('prot','белки'),iF=col('fat','жиры'),iU=col('carb','углеводы');
+      for(let i=1;i<rows.length;i++){ const r=rows[i]; const name=(r[iN]||'').trim(); if(!name)continue;
+        const s=iS!==-1?(r[iS]||'').trim():''; if(s) SOSTAV[name]=s;
+        const c=numOrNull(r[iC]),p=numOrNull(r[iP]),f=numOrNull(r[iF]),u=numOrNull(r[iU]);
+        if(c!==null||p!==null||f!==null||u!==null) KBZHU[name]=[c||0,p||0,f||0,u||0]; }
+    }catch(e){ console.error('dict',e); }
+  }
+
+  function parseMenuRows(rows){
+    const h=rows[0].map(x=>x.trim().toLowerCase());
+    const col=(...n)=>{for(const x of n){const i=h.indexOf(x);if(i!==-1)return i;}return -1;};
+    const iTab=col('tab','вкладка','меню'),iSec=col('section','категория','раздел','группа'),
+          iType=col('type','тип'),iName=col('name','название','наименование','блюдо'),
+          iName2=col('name2','подзаголовок'),iVol=col('vol','объём','объем','вес'),
+          iPrice=col('price','цена'),iDesc=col('desc','описание','состав'),
+          iCal=col('cal','ккал'),iProt=col('prot','белки'),iFat=col('fat','жиры'),iCarb=col('carb','углеводы'),
+          iTags=col('метки','tags','маркеры','tag'),iHide=col('hide','скрыть');
+    const num=v=>{v=(v||'').toString().trim().replace(',','.');const n=parseFloat(v);return isNaN(n)?0:n;};
+    const tabs={};
+    for(let i=1;i<rows.length;i++){ const r=rows[i]; const name=(r[iName]||'').trim(); if(!name)continue;
+      if(iHide!==-1&&/^(1|да|true|x|yes)$/i.test((r[iHide]||'').trim()))continue;
+      const tab=((iTab!==-1&&r[iTab])||'Меню').trim(); const section=((iSec!==-1&&r[iSec])||'').trim();
+      const tRaw=((iType!==-1&&r[iType])||'dish').trim().toLowerCase();
+      const item={ type:/^(pill|добавк|доп)/.test(tRaw)?'pill':'dish', name,
+        name2:iName2!==-1?(r[iName2]||'').trim():'', vol:iVol!==-1?(r[iVol]||'').trim():'',
+        price:iPrice!==-1?(r[iPrice]||'').trim():'', desc:iDesc!==-1?(r[iDesc]||'').trim():'',
+        tags:iTags!==-1?(r[iTags]||'').trim():'',
+        kbzhu:[num(r[iCal]),num(r[iProt]),num(r[iFat]),num(r[iCarb])] };
+      if(!tabs[tab]) tabs[tab]={order:[],map:{}};
+      if(!tabs[tab].map[section]){ tabs[tab].map[section]={title:section,items:[]}; tabs[tab].order.push(section); }
+      tabs[tab].map[section].items.push(item); }
+    return tabs;
+  }
+
+  // ─── Метки блюд (иконки в палитре меню) ───
+  const MK = {
+    leaf:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.05 8.05c-2.73 2.73-2.73 7.15-.02 9.88 1.47-3.4 4.09-6.24 7.36-7.93-2.77 2.34-4.71 5.61-5.39 9.32 2.6 1.23 5.8.78 7.95-1.37C19.43 14.47 20 4 20 4S9.53 4.57 6.05 8.05z"/></svg>',
+    flame:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>',
+    star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
+    spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 7.6L22 12l-8.1 2.4L12 22l-1.9-7.6L2 12l8.1-2.4z"/></svg>'
+  };
+  function markIcons(tags){
+    if(!tags) return '';
+    const t=tags.toLowerCase(); let out='';
+    const add=(cls,title,svg)=>{ out+=`<span class="mk ${cls}" title="${title}" aria-label="${title}">${svg}</span>`; };
+    if(/веган|vegan/.test(t))           add('mk-veg','Веган',MK.leaf);
+    else if(/вег|veg|растит/.test(t))   add('mk-veg','Вегетарианское',MK.leaf);
+    if(/остр|перч|hot|spicy|🌶/.test(t)) add('mk-hot','Острое',MK.flame);
+    if(/хит|популяр|реком|hit|best/.test(t)) add('mk-hit','Хит',MK.star);
+    if(/нов|new/.test(t))               out+='<span class="mk-new-badge" title="Новинка">New</span>';
+    return out;
+  }
+
+  function renderMenuItem(it){
+    const name=it.name||''; const full=it.name2?(name+' '+it.name2):name;
+    let kb=(it.kbzhu&&it.kbzhu.some(x=>x))?it.kbzhu:(KBZHU[full]||KBZHU[name]||null);
+    const hasK=!!(kb&&kb.some(x=>x)); if(hasK) KBZHU[name]=kb;
+    const descText=it.desc||SOSTAV[full]||SOSTAV[name]||''; if(descText) SOSTAV[name]=descText;
+    if(it.type==='pill'){ const pp=it.price?`<span class="pill-price">${_esc(it.price)} ₽</span>`:'';
+      return `<div class="pill"><span class="pill-name">${_esc(name)}</span>${pp}</div>`; }
+    const tap=hasK?` class="dish-title tap" onclick="openKbzhu('${_js(name)}',event)"`:' class="dish-title"';
+    const iB=hasK?'<i class="i">i</i>':'';
+    // Длинный «винный» объём (…бутылка) уводим в подпись, чтобы название не сжималось;
+    // короткий объём (300 г, 40 мл) оставляем в строке справа.
+    const longVol = /бутыл/i.test(it.vol||'');
+    const vol = (it.vol && !longVol) ? `<span class="dish-vol">${_esc(it.vol)}</span>` : '';
+    const price=it.price?`<span class="dish-price">${_esc(it.price)} ₽</span>`:'';
+    const metaBits=[];
+    if(it.name2) metaBits.push(_esc(it.name2));
+    if(it.vol && longVol) metaBits.push(_esc(it.vol));
+    const name2 = metaBits.length ? `<div class="dish-name2">${metaBits.join(' · ')}</div>` : '';
+    const desc=descText?`<div class="dish-desc">${_esc(descText)}</div>`:'';
+    const marks=markIcons(it.tags);
+    return `<div class="menu-item"><div class="dish-row"><span${tap}>${_esc(name)}${marks}${iB}</span>${vol}${price}</div>${name2}${desc}</div>`;
+  }
+  function buildSectionHtml(sec){
+    const isPills=sec.items.length&&sec.items.every(x=>x.type==='pill');
+    const inner=sec.items.map(renderMenuItem).join('');
+    const wrap=isPills?`<div class="pill-grid">${inner}</div>`:`<div class="menu-items">${inner}</div>`;
+    return `<div class="category"><div class="category-header"><span class="category-title">${_esc(sec.title)}</span><div class="category-line"></div></div>${wrap}</div>`;
+  }
+
+  // ─── Комплекс ───
+  const GROUPS={salat:'Салат',soup:'Суп',main:'Горячее',side:'Гарнир'}; const GORDER=['salat','soup','main','side'];
+  let AVAILABLE=[]; const selected={};
+  async function loadSchedule(){
+    try{ const res=await fetchCsv(KOMPLEKS_CSV); if(!res.ok)throw 0;
+      try{ const dh=res.headers.get('date'); if(dh){ const sd=new Date(dh); if(!isNaN(sd)) SERVER_DATE=sd; } }catch(_){}
+      const rows=parseCsv(await res.text()); const h=rows[0].map(x=>x.trim().toLowerCase());
+      const col=(...n)=>{for(const x of n){const i=h.indexOf(x);if(i!==-1)return i;}return -1;};
+      const iWD=col('день недели','деньнедели','день','weekday','dow'),
+            iD=col('date','дата'),iG=col('group','группа','категория'),iN=col('name','название','блюдо','наименование'),
+            iP=col('price','цена'),iS=col('sostav','состав','описание'),
+            iC=col('cal','ккал'),iPr=col('prot','белки'),iF=col('fat','жиры'),iU=col('carb','углеводы');
+      const GMAP={салат:'salat',суп:'soup',горячее:'main',основное:'main',второе:'main',гарнир:'side',salat:'salat',soup:'soup',main:'main',side:'side'};
+      const blank=()=>({salat:[],soup:[],main:[],side:[]});
+      const byDate={}, byWeekday={};
+      for(let i=1;i<rows.length;i++){ const r=rows[i];
+        const gRaw=(r[iG]||'').trim().toLowerCase(), name=(r[iN]||'').trim();
+        if(gRaw==='price'||gRaw==='цена'){ const p=parseInt((name||(r[iP]||'')).toString().replace(/[^0-9]/g,'')); if(p)KOMPLEKS_PRICE=p; continue; }
+        const group=GMAP[gRaw]; if(!group||!name)continue;
+        const date=iD!==-1?(r[iD]||'').trim():'';
+        const wd=iWD!==-1?WDMAP[(r[iWD]||'').trim().toLowerCase()]:'';
+        const price=parseInt((r[iP]||'0').trim())||0; const s=iS!==-1?(r[iS]||'').trim():'';
+        let kb=null; const c=numOrNull(r[iC]),p=numOrNull(r[iPr]),f=numOrNull(r[iF]),u=numOrNull(r[iU]);
+        if(c!==null||p!==null||f!==null||u!==null) kb=[c||0,p||0,f||0,u||0];
+        const item={name,price,sostav:s,kbzhu:kb};
+        if(date){ (byDate[date]||(byDate[date]=blank()))[group].push(item); }
+        else if(wd){ (byWeekday[wd]||(byWeekday[wd]=blank()))[group].push(item); }
+      }
+      return {byDate,byWeekday};
+    }catch(e){ console.error('schedule',e); return null; }
+  }
+  // Меню комплекса на сегодня: сначала точная дата, иначе — по дню недели (недельный график)
+  function currentComplexDay(){
+    if(!SCHEDULE) return null;
+    const byDate=SCHEDULE.byDate&&SCHEDULE.byDate[TODAY_KEY];
+    if(byDate && GORDER.some(g=>(byDate[g]||[]).length)) return byDate;
+    return (SCHEDULE.byWeekday&&SCHEDULE.byWeekday[TODAY_WD])||null;
+  }
+  function renderEmpty(){ return `<div class="kompleks-empty"><div class="kompleks-empty-icon">✦</div>
+    <div class="kompleks-empty-title">Меню скоро обновится</div><div class="kompleks-empty-sub">Зайдите чуть позже</div></div>`; }
+  function kompleksHtml(day){
+    Object.keys(selected).forEach(k=>delete selected[k]);
+    AVAILABLE=GORDER.filter(g=>(day[g]||[]).length);
+    const dateLbl=TODAY_WD?cap(TODAY_WD):'';
+    let html=`<div class="kompleks-price"><span class="kompleks-price-label">Бизнес-ланч<span class="kompleks-date">${dateLbl}</span></span>
+        <span class="kompleks-price-value">${KOMPLEKS_PRICE} ₽</span></div>
+      <div class="kompleks-note"><span>✦</span> Выберите по одному блюду из каждой категории <span>✦</span></div>`;
+    for(const g of AVAILABLE){
+      html+=`<div class="category"><div class="category-header"><span class="category-title" style="--accent:var(--gold)">${GROUPS[g]}</span><div class="category-line"></div></div><div class="choice-grid" data-group="${g}">`;
+      for(const it of (day[g]||[])){
+        if(it.sostav) SOSTAV[it.name]=it.sostav; if(it.kbzhu) KBZHU[it.name]=it.kbzhu;
+        const s=SOSTAV[it.name]||''; const hasK=!!KBZHU[it.name];
+        const fn=s?`<div class="choice-footnote">${_esc(s)}</div>`:'';
+        const pr=Number(it.price)>0?`<div class="choice-price">${Number(it.price)} ₽</div>`:'';
+        const btn=hasK?`<i class="kbzhu-btn" onclick="openKbzhu('${_js(it.name)}',event)">i</i>`:'';
+        html+=`<div class="choice-card" onclick="select(this,'${g}','${_js(it.name)}',${it.price||0})"><div class="choice-name">${_esc(it.name)}</div>${fn}${pr}${btn}</div>`;
+      }
+      html+=`</div></div>`;
+    }
+    html+=`<div id="total-bar" style="display:none"><div class="total-top"><span class="total-label">Ваш выбор</span>
+        <button class="total-reset" onclick="resetAll()">Сбросить</button></div>
+        <div id="total-rows"></div><div class="total-divider"></div><div id="total-kbzhu"></div>
+        <div class="total-bottom"><div class="total-sum-final" id="total-final"></div></div>
+        <div class="total-hint" id="total-hint"></div></div>`;
+    return html;
+  }
+  function select(card,group,name,price){
+    document.querySelectorAll(`[data-group="${group}"] .choice-card`).forEach(c=>c.classList.remove('selected'));
+    if(selected[group]&&selected[group].name===name){ delete selected[group]; }
+    else { card.classList.add('selected'); selected[group]={name,price:Number(price)||0}; }
+    updateTotal();
+  }
+  function updateTotal(){
+    const bar=document.getElementById('total-bar'); if(!bar)return;
+    if(!Object.keys(selected).length){ bar.style.display='none'; return; } bar.style.display='block';
+    let rows=''; GORDER.forEach(g=>{ if(!selected[g])return; const {name,price}=selected[g];
+      const pr=price>0?`<div class="total-row-price">${price} ₽</div>`:'';
+      rows+=`<div class="total-row"><div><div class="total-row-cat">${GROUPS[g]}</div><div class="total-row-name">${_esc(name)}</div></div>${pr}</div>`; });
+    document.getElementById('total-rows').innerHTML=rows;
+    let cal=0,prot=0,fat=0,carb=0,f=false; GORDER.forEach(g=>{ if(!selected[g])return; const d=KBZHU[selected[g].name];
+      if(d){cal+=d[0];prot+=d[1];fat+=d[2];carb+=d[3];f=true;} });
+    const kb=document.getElementById('total-kbzhu');
+    if(f){ kb.style.display='block'; kb.innerHTML=`Итого: <b>${Math.round(cal)}</b> ккал · Б <b>${Math.round(prot*10)/10}</b> · Ж <b>${Math.round(fat*10)/10}</b> · У <b>${Math.round(carb*10)/10}</b>`; }
+    else kb.style.display='none';
+    const miss=AVAILABLE.filter(g=>!selected[g]);
+    document.getElementById('total-final').innerHTML=miss.length?'':`${KOMPLEKS_PRICE} <span class="total-sum-cur">₽</span>`;
+    document.getElementById('total-hint').textContent=miss.length?('Ещё выберите: '+miss.map(g=>GROUPS[g].toLowerCase()).join(', ')):'Бизнес-ланч собран ✦';
+  }
+  function resetAll(){ Object.keys(selected).forEach(k=>delete selected[k]);
+    document.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+    const b=document.getElementById('total-bar'); if(b)b.style.display='none'; }
+
+  // ─── КБЖУ модалка ───
+  function openKbzhu(name,ev){ if(ev){ev.stopPropagation();ev.preventDefault();}
+    const d=KBZHU[name]; if(!d)return;
+    document.getElementById('kbzhuName').textContent=name;
+    const s=SOSTAV[name]||''; const se=document.getElementById('kbzhuSostav');
+    se.textContent=s; se.style.display=s?'block':'none';
+    document.getElementById('kbzhuCal').textContent=Math.round(d[0]);
+    document.getElementById('kbzhuProt').textContent=Math.round(d[1]*10)/10;
+    document.getElementById('kbzhuFat').textContent=Math.round(d[2]*10)/10;
+    document.getElementById('kbzhuCarb').textContent=Math.round(d[3]*10)/10;
+    document.getElementById('kbzhuOverlay').classList.add('show'); }
+  function closeKbzhu(ev){ if(!ev||ev.target.id==='kbzhuOverlay') document.getElementById('kbzhuOverlay').classList.remove('show'); }
+
+  // ─── Навигация: главная ↔ раздел ───
+  function buildHome(){
+    const tabs=Object.keys(MENU_TABS);
+    const tiles=[];
+    tabs.forEach(t=>{ const m=catMeta(t); const secs=MENU_TABS[t].order.filter(Boolean);
+      tiles.push({key:t, name:t, kicker:m.kicker, accent:m.accent, sub:secs.slice(0,3).join(' · ')}); });
+    // Комплексный обед — отдельной широкой плиткой снизу
+    const km=catMeta(KOMPLEKS_TAB);
+    let html=tiles.map(t=>`<button class="tile" style="--accent:${t.accent}" onclick="openCat('${_js(t.key)}')">
+        <div class="tile-kicker">${_esc(t.kicker)}</div>
+        <div class="tile-name">${_esc(t.name)}</div>
+        ${t.sub?`<div class="tile-sub">${_esc(t.sub)}</div>`:''}</button>`).join('');
+    html+=`<button class="tile tile-wide" style="--accent:${km.accent}" onclick="openCat('${KOMPLEKS_TAB}')">
+        <div><div class="tile-kicker">${km.kicker}</div><div class="tile-name">Бизнес-ланч</div></div>
+        <div class="tile-arrow">→</div></button>`;
+    document.getElementById('tiles').innerHTML=html;
+    // Легенда меток
+    const leg=document.getElementById('legend');
+    if(leg) leg.innerHTML =
+      `<span><span class="mk mk-veg">${MK.leaf}</span> Вегетарианское</span>`+
+      `<span><span class="mk mk-hot">${MK.flame}</span> Острое</span>`+
+      `<span><span class="mk mk-hit">${MK.star}</span> Хит</span>`+
+      `<span><span class="mk-new-badge">New</span> Новинка</span>`;
+  }
+  const SHORT={'Основное меню':'Основное','Винная карта':'Вино'};
+  function buildCatNav(activeKey){
+    const btns=Object.keys(MENU_TABS).map(t=>{
+      const warm=/вин|бар/i.test(t), on=(t===activeKey);
+      const style=on?(warm?'style="background:var(--rust);border-color:var(--rust);color:var(--paper)"'
+                          :'style="background:var(--olive-deep);border-color:var(--olive-deep);color:var(--paper)"'):'';
+      return `<button class="nav-btn${on?' active':''}" ${style} onclick="openCat('${_js(t)}')">${_esc(SHORT[t]||t)}</button>`;
+    }).join('');
+    document.getElementById('navScroll').innerHTML=btns;
+  }
+  // ─── Возрастное подтверждение 18+ для разделов с алкоголем ───
+  let pendingAgeKey=null;
+  function ageOk(){ try{ return sessionStorage.getItem('age18')==='1'; }catch(e){ return false; } }
+  function declineAge(){ document.getElementById('ageOverlay').classList.remove('show'); pendingAgeKey=null; goHome(); }
+  function confirmAge(){ try{ sessionStorage.setItem('age18','1'); }catch(e){} document.getElementById('ageOverlay').classList.remove('show'); const k=pendingAgeKey; pendingAgeKey=null; if(k) openCat(k); }
+
+  function openCat(key){
+    // Раздел с алкоголем (Бар / Винная карта) — сначала подтверждение 18+
+    if(/бар|вин/i.test(key) && !ageOk()){ pendingAgeKey=key; document.getElementById('ageOverlay').classList.add('show'); return; }
+    const body=document.getElementById('catBody');
+    body.className = key===KOMPLEKS_TAB ? 'cat-kompleks' : 'cat-food';
+    // Акцент раздела: еда — олива, бар/вино — терракота, комплекс — золото
+    const warm=/вин|бар/i.test(key);
+    body.style.setProperty('--accent', key===KOMPLEKS_TAB?'var(--gold)':(warm?'var(--rust)':'var(--olive-deep)'));
+    buildCatNav(key);
+    if(key===KOMPLEKS_TAB){
+      const day=currentComplexDay();
+      const has=day&&GORDER.some(g=>(day[g]||[]).length);
+      body.innerHTML=has?kompleksHtml(day):renderEmpty();
+    } else {
+      const data=MENU_TABS[key];
+      if(!data||!data.order.length){ body.innerHTML=renderEmpty(); }
+      else {
+        const anyK=data.order.some(s=>data.map[s].items.some(it=>(it.kbzhu&&it.kbzhu.some(x=>x))||KBZHU[it.name]));
+        const hint=anyK?'<div class="hint-line"><span>✦</span> Нажмите на блюдо — состав и КБЖУ <span>✦</span></div>':'';
+        body.innerHTML=hint+data.order.map(s=>buildSectionHtml(data.map[s])).join('');
+      }
+    }
+    document.getElementById('home').classList.remove('active');
+    document.getElementById('cat').classList.add('active');
+    window.scrollTo(0,0);
+    history.pushState({cat:key},'', '#'+encodeURIComponent(key));
+  }
+  function goHome(){
+    document.getElementById('cat').classList.remove('active');
+    document.getElementById('home').classList.add('active');
+    window.scrollTo(0,0);
+    if(location.hash) history.pushState({},'', location.pathname);
+  }
+  window.addEventListener('popstate', ()=>{
+    if(document.getElementById('cat').classList.contains('active')) goHome();
+  });
+
+  const QR_SVG='<svg viewBox="0 0 29 29" width="100%" height="100%" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QR программы лояльности"><rect x="0" y="0" width="29" height="29" fill="#ffffff"/><path style="stroke:#000000" transform="translate(0,0.5)" d="M0,0h1M1,0h1M2,0h1M3,0h1M4,0h1M5,0h1M6,0h1M9,0h1M10,0h1M11,0h1M13,0h1M15,0h1M18,0h1M19,0h1M20,0h1M22,0h1M23,0h1M24,0h1M25,0h1M26,0h1M27,0h1M28,0h1M0,1h1M6,1h1M10,1h1M12,1h1M13,1h1M14,1h1M15,1h1M17,1h1M18,1h1M20,1h1M22,1h1M28,1h1M0,2h1M2,2h1M3,2h1M4,2h1M6,2h1M8,2h1M9,2h1M12,2h1M13,2h1M15,2h1M16,2h1M18,2h1M20,2h1M22,2h1M24,2h1M25,2h1M26,2h1M28,2h1M0,3h1M2,3h1M3,3h1M4,3h1M6,3h1M8,3h1M14,3h1M15,3h1M16,3h1M17,3h1M22,3h1M24,3h1M25,3h1M26,3h1M28,3h1M0,4h1M2,4h1M3,4h1M4,4h1M6,4h1M8,4h1M12,4h1M16,4h1M18,4h1M19,4h1M20,4h1M22,4h1M24,4h1M25,4h1M26,4h1M28,4h1M0,5h1M6,5h1M8,5h1M10,5h1M11,5h1M15,5h1M16,5h1M18,5h1M20,5h1M22,5h1M28,5h1M0,6h1M1,6h1M2,6h1M3,6h1M4,6h1M5,6h1M6,6h1M8,6h1M10,6h1M12,6h1M14,6h1M16,6h1M18,6h1M20,6h1M22,6h1M23,6h1M24,6h1M25,6h1M26,6h1M27,6h1M28,6h1M8,7h1M9,7h1M10,7h1M11,7h1M14,7h1M15,7h1M16,7h1M20,7h1M0,8h1M2,8h1M3,8h1M4,8h1M5,8h1M6,8h1M10,8h1M11,8h1M15,8h1M17,8h1M19,8h1M22,8h1M23,8h1M24,8h1M25,8h1M26,8h1M1,9h1M2,9h1M3,9h1M4,9h1M5,9h1M7,9h1M8,9h1M10,9h1M12,9h1M13,9h1M14,9h1M16,9h1M18,9h1M19,9h1M20,9h1M21,9h1M22,9h1M23,9h1M24,9h1M28,9h1M1,10h1M3,10h1M6,10h1M12,10h1M13,10h1M14,10h1M15,10h1M17,10h1M18,10h1M21,10h1M22,10h1M23,10h1M0,11h1M1,11h1M3,11h1M5,11h1M7,11h1M9,11h1M10,11h1M11,11h1M12,11h1M13,11h1M15,11h1M16,11h1M20,11h1M21,11h1M24,11h1M25,11h1M27,11h1M0,12h1M1,12h1M4,12h1M6,12h1M8,12h1M9,12h1M10,12h1M12,12h1M14,12h1M17,12h1M20,12h1M25,12h1M26,12h1M0,13h1M1,13h1M2,13h1M8,13h1M9,13h1M12,13h1M16,13h1M17,13h1M18,13h1M19,13h1M20,13h1M21,13h1M22,13h1M23,13h1M24,13h1M28,13h1M1,14h1M3,14h1M4,14h1M6,14h1M7,14h1M9,14h1M10,14h1M11,14h1M12,14h1M15,14h1M17,14h1M18,14h1M20,14h1M21,14h1M22,14h1M24,14h1M25,14h1M26,14h1M0,15h1M1,15h1M4,15h1M5,15h1M7,15h1M8,15h1M10,15h1M14,15h1M15,15h1M16,15h1M20,15h1M24,15h1M27,15h1M4,16h1M6,16h1M7,16h1M17,16h1M18,16h1M23,16h1M25,16h1M26,16h1M0,17h1M1,17h1M4,17h1M7,17h1M8,17h1M9,17h1M10,17h1M12,17h1M13,17h1M14,17h1M16,17h1M17,17h1M18,17h1M19,17h1M20,17h1M21,17h1M22,17h1M23,17h1M24,17h1M26,17h1M28,17h1M0,18h1M2,18h1M4,18h1M6,18h1M8,18h1M13,18h1M14,18h1M15,18h1M16,18h1M17,18h1M20,18h1M21,18h1M23,18h1M26,18h1M0,19h1M5,19h1M7,19h1M8,19h1M9,19h1M10,19h1M12,19h1M13,19h1M15,19h1M18,19h1M19,19h1M20,19h1M22,19h1M23,19h1M27,19h1M0,20h1M5,20h1M6,20h1M7,20h1M9,20h1M11,20h1M14,20h1M15,20h1M17,20h1M20,20h1M21,20h1M22,20h1M23,20h1M24,20h1M26,20h1M27,20h1M28,20h1M8,21h1M10,21h1M16,21h1M20,21h1M24,21h1M25,21h1M26,21h1M27,21h1M28,21h1M0,22h1M1,22h1M2,22h1M3,22h1M4,22h1M5,22h1M6,22h1M9,22h1M11,22h1M15,22h1M16,22h1M17,22h1M18,22h1M19,22h1M20,22h1M22,22h1M24,22h1M25,22h1M26,22h1M0,23h1M6,23h1M8,23h1M9,23h1M14,23h1M16,23h1M18,23h1M19,23h1M20,23h1M24,23h1M27,23h1M0,24h1M2,24h1M3,24h1M4,24h1M6,24h1M8,24h1M15,24h1M16,24h1M17,24h1M20,24h1M21,24h1M22,24h1M23,24h1M24,24h1M26,24h1M0,25h1M2,25h1M3,25h1M4,25h1M6,25h1M8,25h1M10,25h1M12,25h1M13,25h1M14,25h1M16,25h1M20,25h1M25,25h1M26,25h1M27,25h1M28,25h1M0,26h1M2,26h1M3,26h1M4,26h1M6,26h1M8,26h1M9,26h1M11,26h1M12,26h1M13,26h1M15,26h1M16,26h1M19,26h1M20,26h1M21,26h1M22,26h1M23,26h1M24,26h1M25,26h1M26,26h1M27,26h1M0,27h1M6,27h1M9,27h1M13,27h1M14,27h1M16,27h1M20,27h1M21,27h1M22,27h1M24,27h1M25,27h1M27,27h1M0,28h1M1,28h1M2,28h1M3,28h1M4,28h1M5,28h1M6,28h1M8,28h1M10,28h1M14,28h1M17,28h1M18,28h1M22,28h1M23,28h1M24,28h1M25,28h1M26,28h1"/></svg>';
+
+  async function initAll(){
+    document.getElementById('qr').innerHTML=QR_SVG;
+    await loadDict().catch(()=>{});
+    // Меню и расписание грузим параллельно
+    const [menuRes] = await Promise.all([
+      fetchCsv(MENU_CSV).then(r=>r.text()).then(t=>MENU_TABS=parseMenuRows(parseCsv(t))).catch(e=>console.error('menu',e)),
+      loadSchedule().then(s=>SCHEDULE=s)
+    ]);
+    const ti=todayInfo(SERVER_DATE); TODAY_KEY=ti.key; TODAY_WD=ti.wd;   // день по времени сервера
+    buildHome();
+    // Deep-link: #Бар, #Винная%20карта, #__kompleks__ открывают раздел сразу (удобно для QR)
+    const hash = decodeURIComponent((location.hash||'').replace(/^#/,'')).trim();
+    if (hash && (hash===KOMPLEKS_TAB || MENU_TABS[hash])) openCat(hash);
+  }
+  window.addEventListener('DOMContentLoaded', initAll);
+</script>
+</body>
+</html>
