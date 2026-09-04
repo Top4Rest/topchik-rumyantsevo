@@ -29,9 +29,9 @@ jobs:
       - name: Download CSVs from Google Sheets
         run: |
           mkdir -p data
-          URL_MENU="ВСТАВЬ_ССЫЛКУ_ЛИСТА_МЕНЮ"
-          URL_KOMPLEKS="ВСТАВЬ_ССЫЛКУ_ЛИСТА_БИЗНЕС-ЛАНЧ"
-          URL_SOSTAV="ВСТАВЬ_ССЫЛКУ_ЛИСТА_СОСТАВЫ"
+          URL_MENU="https://docs.google.com/spreadsheets/d/e/2PACX-1vRH8LSjqxHSV9lGE2LxCNvQQ_MWSP4oWAu47al2IJyIvg6xPmgJQoFiyvau-e8l1R2hYtzCugh2JFKF/pub?gid=1078267207&single=true&output=csv"
+          URL_KOMPLEKS="https://docs.google.com/spreadsheets/d/e/2PACX-1vRH8LSjqxHSV9lGE2LxCNvQQ_MWSP4oWAu47al2IJyIvg6xPmgJQoFiyvau-e8l1R2hYtzCugh2JFKF/pub?gid=2084885374&single=true&output=csv"
+          URL_SOSTAV="https://docs.google.com/spreadsheets/d/e/2PACX-1vRH8LSjqxHSV9lGE2LxCNvQQ_MWSP4oWAu47al2IJyIvg6xPmgJQoFiyvau-e8l1R2hYtzCugh2JFKF/pub?gid=439880312&single=true&output=csv"
           dl () {
             case "$1" in
               https://*)
@@ -55,7 +55,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "Изменений нет — коммит не нужен."
           else
-            git commit -m "Sync menu data from Google Sheets"
+            git commit -m "Обновление меню из Google-таблицы"
             git push
           fi
 
