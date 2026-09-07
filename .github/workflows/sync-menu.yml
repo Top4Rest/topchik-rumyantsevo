@@ -67,16 +67,16 @@ jobs:
           git push
 
       - name: Setup Pages
-        if: steps.sync.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        if: steps.sync.outputs.changed == 'true' || github.event_name == 'push'
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        if: steps.sync.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        if: steps.sync.outputs.changed == 'true' || github.event_name == 'push'
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
       - name: Deploy to GitHub Pages
         id: deployment
-        if: steps.sync.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        if: steps.sync.outputs.changed == 'true' || github.event_name == 'push'
         uses: actions/deploy-pages@v5
